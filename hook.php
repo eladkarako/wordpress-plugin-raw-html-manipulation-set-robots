@@ -53,7 +53,7 @@
 
         /* dump anything if was any */
         echo $html;
-      }, -9999999);
+      }, -9999998);
 
 
       /**
@@ -62,7 +62,7 @@
       add_action('shutdown', function () {
         while (ob_get_level() > 0)
           @ob_flush_end();
-      }, 9999999);
+      }, 9999998);
     }
   }
 
