@@ -28,20 +28,37 @@
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ */
 
 
+call_user_func(function () {
+  if (is_admin()) return;
+/*╔══════════════════════╗
+  ║ Modify HTTP-Headers. ║
+  ╚══════════════════════╝*/
   header("X-Robots-Tag: archive,follow,imageindex,index,odp,snippet,translate",               true);
-/* header("X-Robots-Tag: noarchive,nofollow,noimageindex,noindex,noodp,nosnippet,notranslate", true); */
-  
-  require_once('hook.php');
+/*header("X-Robots-Tag: noarchive,nofollow,noimageindex,noindex,noodp,nosnippet,notranslate", true);*/
 
-  hook_html(function ($html) {
-    $html = preg_replace(
-              "#\<\s*meta[^\>]*name\s*=\s*[\"\']robots[\"\'][^\>]*\>#msi"
-            , '<meta name="robots" content="archive,follow,imageindex,index,odp,snippet,translate"/>'
-         /* , '<meta name="robots" content="noarchive,nofollow,noimageindex,noindex,noodp,nosnippet,notranslate"/>' */
-            , $html
-            );
+/*╔══════════════════╗
+  ║ Modify Raw-HTML. ║
+  ╚══════════════════╝*/
+  add_action('template_redirect', function (){
+    @ob_start(function($html){
+    /*────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────*/
+    /*╔═══════╗
+      ║ $html ║
+      ╚═══════╝*/
+                $html = preg_replace(
+                            "#\<\s*meta[^\>]*name\s*=\s*[\"\']robots[\"\'][^\>]*\>#msi"
+                          , '<meta name="robots" content="archive,follow,imageindex,index,odp,snippet,translate"/>'
+                       /* , '<meta name="robots" content="noarchive,nofollow,noimageindex,noindex,noodp,nosnippet,notranslate"/>' */
+                          , $html
+                        );
+    /*────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────*/
+              return $html;
+             });
+  }, -9999998);
 
-    return $html;
-  });
+  add_action('shutdown', function () {
+    while (ob_get_level() > 0) @ob_flush_end();
+  }, +9999998);
+});
 
 ?>
