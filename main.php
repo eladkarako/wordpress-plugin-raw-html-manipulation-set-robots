@@ -57,7 +57,7 @@ call_user_func(function () {
   }, -9999998);
 
   add_action('shutdown', function () {
-    while (ob_get_level() > 0) @ob_flush_end();
+    while (ob_get_level() > 0) @ob_end_flush();
   }, +9999998);
 });
 
